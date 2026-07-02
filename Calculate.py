@@ -15,6 +15,10 @@ class CalculatorApp:
 
         self._build_ui()
         self.root.bind("<Escape>", self.on_escape)
+        self.root.bind("<Return>", self.on_enter)
+        self.root.bind("<KP_Enter>", self.on_enter)
+        self.root.bind("<BackSpace>", self.on_backspace)
+        self.root.bind("<Key>", self.on_keypress)
 
     def _build_ui(self):
         self.root.configure(bg="#f2f2f2")
@@ -73,6 +77,38 @@ class CalculatorApp:
     def on_escape(self, event=None):
         self.clear_input()
         return "break"
+
+    def on_enter(self, event=None):
+        self.on_equal()
+        return "break"
+
+    def on_backspace(self, event=None):
+        if self.expression:
+            self.expression = self.expression[:-1]
+            self.display_var.set(self.expression if self.expression else "0")
+        return "break"
+
+    def on_keypress(self, event):
+        key = event.keysym
+        if key in {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "."}:
+            self.on_button_click(key)
+            return "break"
+        if key in {"plus", "KP_Add", "equal"}:
+            self.on_button_click("+")
+            return "break"
+        if key in {"minus", "KP_Subtract"}:
+            self.on_button_click("-")
+            return "break"
+        if key in {"asterisk", "KP_Multiply", "multiply"}:
+            self.on_button_click("*")
+            return "break"
+        if key in {"slash", "KP_Divide", "divide"}:
+            self.on_button_click("/")
+            return "break"
+        if key in {"c", "C"}:
+            self.clear_input()
+            return "break"
+        return None
 
     def on_button_click(self, value):
         if value == "C":
