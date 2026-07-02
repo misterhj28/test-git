@@ -14,6 +14,7 @@ class CalculatorApp:
         self.display_var = tk.StringVar(value="0")
 
         self._build_ui()
+        self.root.bind("<Escape>", self.on_escape)
 
     def _build_ui(self):
         self.root.configure(bg="#f2f2f2")
@@ -65,10 +66,17 @@ class CalculatorApp:
         for i in range(6):
             self.root.grid_rowconfigure(i, weight=1)
 
+    def clear_input(self):
+        self.expression = ""
+        self.display_var.set("0")
+
+    def on_escape(self, event=None):
+        self.clear_input()
+        return "break"
+
     def on_button_click(self, value):
         if value == "C":
-            self.expression = ""
-            self.display_var.set("0")
+            self.clear_input()
             return
 
         if value in {"+", "-", "*", "/"}:
